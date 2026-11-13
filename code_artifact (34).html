@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ҰЛТТЫҚ ОЙЫНДАР ӘЛЕМІ - Интерактивті тақта</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Nunito', sans-serif;
+            background: #1a2a6c;
+        }
+
+        /* 3D стиліндегі батырмалар мен панельдер */
+        .btn-3d {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 10px 0 rgba(0,0,0,0.25), 0 15px 25px rgba(0,0,0,0.3);
+        }
+        .btn-3d:active {
+            transform: translateY(8px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        .card-3d {
+            background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(240,248,255,0.88));
+            backdrop-filter: blur(10px);
+            border: 4px solid #ffffff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25), inset 0 -8px 0 rgba(0,0,0,0.1);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .card-3d:active {
+            transform: scale(0.95);
+        }
+
+        /* Анимациялар */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
+            50% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); }
+        }
+        .glow-gold {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes cloud-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+        .cloud {
+            animation: cloud-move 45s linear infinite;
+        }
+
+        /* Қазақша ою-өрнек жиегі */
+        .ornament-border {
+            background-image: radial-gradient(circle at 10px 10px, #fbbf24 4px, transparent 5px),
+                              radial-gradient(circle at 30px 10px, #f59e0b 4px, transparent 5px);
+            background-size: 40px 20px;
+        }
+
+        /* Тоғызқұмалақ отаулары */
+        .otau {
+            background: radial-gradient(circle at 30% 30%, #8b5a2b, #5c3a21);
+            box-shadow: inset 0 8px 15px rgba(0,0,0,0.6), 0 4px 8px rgba(255,255,255,0.2);
+            border: 3px solid #d97706;
+        }
+        .otau:active {
+            transform: scale(0.96);
+            border-color: #fde047;
+        }
+        .kazan {
+            background: radial-gradient(circle at 30% 30%, #78350f, #451a03);
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.8), 0 4px 10px rgba(255,255,255,0.2);
+            border: 4px solid #f59e0b;
+        }
+        .kumalak {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ffffff, #cbd5e1 60%, #475569);
+            box-shadow: 1px 2px 3px rgba(0,0,0,0.5);
+            display: inline-block;
+            margin: 1px;
+        }
+        .tuzdyk-badge {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #451a03;
+            font-weight: 900;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* Ақ сүйек түнгі аспан эффектісі */
+        .night-sky {
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        }
+    </style>
+</head>
+<body class="w-screen h-screen overflow-hidden relative">
+
+    <!-- ==================== 1. БАСТЫ ЭКРАН (MAIN MENU) ==================== -->
+    <div id="main-menu" class="w-full h-full relative flex flex-col justify-between overflow-hidden bg-gradient-to-b from-sky-400 via-sky-200 to-emerald-400">
+        
+        <!-- Аспандағы күн және бұлттар -->
+        <div class="absolute top-6 right-12 w-28 h-28 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-200 glow-gold z-0"></div>
+        <svg class="cloud absolute top-10 left-0 w-48 h-24 text-white/80 z-0" viewBox="0 0 200 100" fill="currentColor">
+            <path d="M40,80 Q20,80 20,60 Q20,40 45,40 Q55,15 85,20 Q115,10 130,35 Q160,30 170,55 Q185,60 180,75 Q175,80 155,80 Z"/>
+        </svg>
+        <svg class="cloud absolute top-28 left-1/3 w-64 h-28 text-white/60 z-0" style="animation-duration: 60s;" viewBox="0 0 200 100" fill="currentColor">
+            <path d="M40,80 Q20,80 20,60 Q20,40 45,40 Q55,15 85,20 Q115,10 130,35 Q160,30 170,55 Q185,60 180,75 Q175,80 155,80 Z"/>
+        </svg>
+
+        <!-- Алыстағы таулар -->
+        <svg class="absolute bottom-1/4 w-full h-64 z-0" preserveAspectRatio="none" viewBox="0 0 1440 320">
+            <path fill="#60a5fa" fill-opacity="0.7" d="M0,224L120,160L240,224L360,128L480,224L600,96L720,224L840,140L960,224L1080,110L1200,224L1320,150L1440,224L1440,320L0,320Z"></path>
+            <path fill="#3b82f6" fill-opacity="0.8" d="M0,256L180,160L360,256L540,120L720,256L900,140L1080,256L1260,130L1440,256L1440,320L0,320Z"></path>
+            <!-- Тау басындағы қар -->
+            <path fill="#ffffff" d="M540,120 L505,155 L525,150 L540,165 L555,150 L575,155 Z M900,140 L870,170 L890,165 L900,178 L915,165 L930,170 Z M1260,130 L1225,165 L1245,160 L1260,175 L1275,160 L1295,165 Z"></path>
+        </svg>
+
+        <!-- Жасыл жайлау (Жер бедері) -->
+        <div class="absolute bottom-0 w-full h-1/3 bg-gradient-to-b from-emerald-400 via-green-500 to-emerald-700 rounded-t-[50%] scale-x-125 z-0 shadow-inner"></div>
+
+        <!-- Сол жақтағы 3D Киіз үй және Ою-өрнек -->
+        <div class="absolute bottom-8 left-6 w-64 h-56 z-10 pointer-events-none hidden md:block">
+            <svg viewBox="0 0 300 260" class="w-full h-full drop-shadow-2xl">
+                <!-- Киіз үйдің көлеңкесі -->
+                <ellipse cx="150" cy="235" rx="135" ry="18" fill="rgba(0,0,0,0.3)"/>
+                <!-- Киіз үй негізі (Кереге) -->
+                <path d="M35,140 L265,140 L275,230 Q150,245 25,230 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                <!-- Басқұр (Оюлы белдеу) -->
+                <path d="M33,145 Q150,160 267,145 L269,165 Q150,180 31,165 Z" fill="#dc2626"/>
+                <path d="M33,152 Q150,167 267,152" stroke="#fbbf24" stroke-width="4" stroke-dasharray="12 8" fill="none"/>
+                <!-- Уықтар мен күмбез -->
+                <path d="M35,140 Q70,60 150,50 Q230,60 265,140 Z" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+                <!-- Түндік / Шаңырақ -->
+                <ellipse cx="150" cy="50" rx="45" ry="14" fill="#b45309" stroke="#78350f" stroke-width="3"/>
+                <path d="M115,48 Q150,30 185,48" stroke="#fbbf24" stroke-width="3" fill="none"/>
+                <!-- Сықырлауық (Есік) -->
+                <rect x="122" y="155" width="56" height="80" rx="6" fill="#92400e" stroke="#fbbf24" stroke-width="3"/>
+                <line x1="150" y1="155" x2="150" y2="235" stroke="#451a03" stroke-width="3"/>
+                <!-- Есіктегі қошқар мүйіз ою -->
+                <circle cx="136" cy="190" r="6" stroke="#fbbf24" stroke-width="2" fill="none"/>
+                <circle cx="164" cy="190" r="6" stroke="#fbbf24" stroke-width="2" fill="none"/>
+            </svg>
+        </div>
+
+        <!-- Оң жақтағы Домбыра және Көңілді балалар -->
+        <div class="absolute bottom-6 right-6 w-72 h-60 z-10 pointer-events-none hidden md:flex items-end justify-end">
+            <svg viewBox="0 0 320 260" class="w-full h-full drop-shadow-2xl">
+                <!-- Үлкен 3D Домбыра -->
+                <g transform="translate(210, 20) rotate(18)">
+                    <rect x="22" y="0" width="10" height="130" rx="3" fill="#78350f"/>
+                    <!-- Пернелер -->
+                    <line x1="22" y1="20" x2="32" y2="20" stroke="#fbbf24" stroke-width="2"/>
+                    <line x1="22" y1="35" x2="32" y2="35" stroke="#fbbf24" stroke-width="2"/>
+                    <line x1="22" y1="50" x2="32" y2="50" stroke="#fbbf24" stroke-width="2"/>
+                    <line x1="22" y1="65" x2="32" y2="65" stroke="#fbbf24" stroke-width="2"/>
+                    <line x1="22" y1="80" x2="32" y2="80" stroke="#fbbf24" stroke-width="2"/>
+                    <!-- Шайтан тиек пен құлақтар -->
+                    <circle cx="18" cy="10" r="4" fill="#d97706"/>
+                    <circle cx="36" cy="15" r="4" fill="#d97706"/>
+                    <!-- Шанақ -->
+                    <ellipse cx="27" cy="165" rx="34" ry="45" fill="#b45309" stroke="#fbbf24" stroke-width="3"/>
+                    <ellipse cx="27" cy="165" rx="28" ry="38" fill="#d97706"/>
+                    <circle cx="27" cy="155" r="6" fill="#451a03"/>
+                    <!-- Ішектер -->
+                    <line x1="25" y1="10" x2="25" y2="195" stroke="#fef08a" stroke-width="1.2"/>
+                    <line x1="29" y1="10" x2="29" y2="195" stroke="#fef08a" stroke-width="1.2"/>
+                </g>
+
+                <!-- Көңілді бала (Ұл бала тақиямен) -->
+                <g transform="translate(30, 85)">
+                    <!-- Денесі (Қазақы камзол) -->
+                    <rect x="25" y="75" width="50" height="65" rx="15" fill="#2563eb"/>
+                    <path d="M40,75 L40,140 M60,75 L60,140" stroke="#fbbf24" stroke-width="3"/>
+                    <!-- Қолдары (Қуанып көтерген) -->
+                    <path d="M25,85 Q5,60 15,45" stroke="#2563eb" stroke-width="12" stroke-linecap="round" fill="none"/>
+                    <path d="M75,85 Q95,60 85,45" stroke="#2563eb" stroke-width="12" stroke-linecap="round" fill="none"/>
+                    <!-- Басы -->
+                    <circle cx="50" cy="45" r="28" fill="#fde68a"/>
+                    <!-- Көздері мен күлкісі -->
+                    <circle cx="40" cy="42" r="3.5" fill="#1e293b"/>
+                    <circle cx="60" cy="42" r="3.5" fill="#1e293b"/>
+                    <path d="M40,54 Q50,65 60,54" stroke="#dc2626" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <!-- Тақия -->
+                    <path d="M24,30 Q50,5 76,30 Z" fill="#1d4ed8" stroke="#fbbf24" stroke-width="2"/>
+                    <circle cx="50" cy="18" r="4" fill="#fbbf24"/>
+                </g>
+
+                <!-- Көңілді қыз бала (Сәукеле / Үкілі тақиямен) -->
+                <g transform="translate(115, 95)">
+                    <!-- Көйлегі -->
+                    <path d="M25,70 L65,70 L75,135 L15,135 Z" fill="#ec4899"/>
+                    <path d="M30,70 L60,70 L64,110 L26,110 Z" fill="#be185d" stroke="#fbbf24" stroke-width="2"/>
+                    <!-- Басы -->
+                    <circle cx="45" cy="42" r="25" fill="#fde68a"/>
+                    <!-- Бұрымдары -->
+                    <path d="M20,45 Q12,75 18,95" stroke="#1e293b" stroke-width="6" stroke-linecap="round" fill="none"/>
+                    <path d="M70,45 Q78,75 72,95" stroke="#1e293b" stroke-width="6" stroke-linecap="round" fill="none"/>
+                    <!-- Көздері мен күлкісі -->
+                    <circle cx="37" cy="40" r="3" fill="#1e293b"/>
+                    <circle cx="53" cy="40" r="3" fill="#1e293b"/>
+                    <path d="M37,50 Q45,59 53,50" stroke="#dc2626" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <!-- Үкілі тақия -->
+                    <path d="M22,26 Q45,6 68,26 Z" fill="#db2777" stroke="#fbbf24" stroke-width="2"/>
+                    <path d="M45,12 Q35,-5 45,-12 Q55,-5 45,12" fill="#ffffff"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Жоғарғы тақырып және Ою-өрнек -->
+        <header class="relative z-20 pt-3 pb-1 px-4 sm:px-6 flex flex-col items-center shrink-0">
+            <!-- Қазақша ою-өрнек лентасы -->
+            <div class="w-full max-w-6xl h-4 bg-amber-400 rounded-full mb-2 shadow-md flex items-center justify-around overflow-hidden border-2 border-amber-600">
+                <span class="text-red-700 font-black text-xs tracking-widest">❖ ❖ ❖ ҰЛТТЫҚ МҰРА ❖ ❖ ❖ ҚАЗАҚ ОЙЫНДАРЫ ❖ ❖ ❖</span>
+            </div>
+
+            <div class="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 p-1.5 rounded-3xl shadow-2xl border-4 border-white animate-float">
+                <div class="bg-gradient-to-b from-blue-900 to-indigo-950 px-6 sm:px-10 py-2.5 rounded-2xl flex items-center gap-3 sm:gap-5">
+                    <span class="text-2xl sm:text-4xl">🇰🇿</span>
+                    <h1 class="text-2xl sm:text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400 tracking-wider text-center drop-shadow">
+                        ҰЛТТЫҚ ОЙЫНДАР ӘЛЕМІ
+                    </h1>
+                    <span class="text-2xl sm:text-4xl">🦅</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Ортадағы 5 үлкен ойын батырмасы (Толық экранға бос орын қалдырмай жайылған) -->
+        <main class="relative z-20 flex-1 w-full flex items-stretch justify-center px-4 sm:px-8 py-3 sm:py-5 overflow-hidden">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5 w-full h-full">
+                
+                <!-- 1. АСЫҚ АТУ -->
+                <button onclick="openGame('asyk')" class="card-3d h-full rounded-3xl p-3 sm:p-5 flex flex-col items-center justify-between group cursor-pointer border-b-8 border-amber-500 hover:border-amber-400">
+                    <div class="w-full flex-1 min-h-0 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-200 flex items-center justify-center shadow-inner mb-3 relative overflow-hidden p-2">
+                        <!-- Нақты 3D Асық SVG -->
+                        <svg viewBox="0 0 120 120" class="w-full h-full max-w-[150px] max-h-[150px] drop-shadow-lg group-hover:scale-110 transition-transform">
+                            <defs>
+                                <linearGradient id="asykGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fef3c7"/>
+                                    <stop offset="50%" stop-color="#f59e0b"/>
+                                    <stop offset="100%" stop-color="#b45309"/>
+                                </linearGradient>
+                                <linearGradient id="saqaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#f87171"/>
+                                    <stop offset="50%" stop-color="#dc2626"/>
+                                    <stop offset="100%" stop-color="#7f1d1d"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Артқы кәдімгі асық -->
+                            <g transform="translate(15, 25) scale(0.65)">
+                                <path d="M22,25 C12,25 8,40 14,55 C8,70 12,88 25,92 C36,95 45,84 52,84 C59,84 68,95 79,92 C92,88 96,70 90,55 C96,40 92,25 82,25 C70,25 62,36 52,36 C42,36 34,25 22,25 Z" fill="url(#asykGrad1)" stroke="#78350f" stroke-width="4"/>
+                                <path d="M35,52 Q52,65 69,52" stroke="#78350f" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <ellipse cx="52" cy="68" rx="10" ry="6" fill="rgba(120,53,15,0.25)"/>
+                            </g>
+                            <!-- Алдыңғы қызыл боялған Сақа (нақты асық пішіні) -->
+                            <g transform="translate(42, 22) scale(0.75) rotate(12)">
+                                <path d="M22,25 C12,25 8,40 14,55 C8,70 12,88 25,92 C36,95 45,84 52,84 C59,84 68,95 79,92 C92,88 96,70 90,55 C96,40 92,25 82,25 C70,25 62,36 52,36 C42,36 34,25 22,25 Z" fill="url(#saqaGrad)" stroke="#450a0a" stroke-width="4"/>
+                                <!-- Алшы/Тәйке ішкі ойығы -->
+                                <path d="M32,48 Q52,64 72,48" stroke="#fca5a5" stroke-width="4" fill="none" stroke-linecap="round"/>
+                                <ellipse cx="52" cy="68" rx="12" ry="7" fill="rgba(69,10,10,0.35)"/>
+                                <circle cx="30" cy="40" r="4" fill="rgba(255,255,255,0.4)"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <span class="text-xl sm:text-2xl lg:text-3xl font-black text-amber-900 tracking-wide text-center leading-tight">АСЫҚ АТУ</span>
+                    <span class="mt-2 sm:mt-3 w-full py-2 sm:py-2.5 bg-amber-500 text-white text-sm sm:text-lg font-black rounded-2xl shadow text-center">ОЙНАУ ▶</span>
+                </button>
+
+                <!-- 2. ТОҒЫЗҚҰМАЛАҚ -->
+                <button onclick="openGame('togyz')" class="card-3d h-full rounded-3xl p-3 sm:p-5 flex flex-col items-center justify-between group cursor-pointer border-b-8 border-emerald-600 hover:border-emerald-500">
+                    <div class="w-full flex-1 min-h-0 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-200 flex items-center justify-center shadow-inner mb-3 relative p-2">
+                        <!-- 3D Тоғызқұмалақ тақтасы SVG -->
+                        <svg viewBox="0 0 120 120" class="w-full h-full max-w-[150px] max-h-[150px] drop-shadow-lg group-hover:scale-110 transition-transform">
+                            <rect x="10" y="25" width="100" height="70" rx="12" fill="#78350f" stroke="#fbbf24" stroke-width="4"/>
+                            <!-- Отаулар -->
+                            <circle cx="30" cy="43" r="9" fill="#451a03"/>
+                            <circle cx="50" cy="43" r="9" fill="#451a03"/>
+                            <circle cx="70" cy="43" r="9" fill="#451a03"/>
+                            <circle cx="90" cy="43" r="9" fill="#451a03"/>
+                            <circle cx="30" cy="77" r="9" fill="#451a03"/>
+                            <circle cx="50" cy="77" r="9" fill="#451a03"/>
+                            <circle cx="70" cy="77" r="9" fill="#451a03"/>
+                            <circle cx="90" cy="77" r="9" fill="#451a03"/>
+                            <!-- Қазан -->
+                            <rect x="25" y="56" width="70" height="8" rx="4" fill="#fbbf24"/>
+                            <!-- Құмалақтар -->
+                            <circle cx="28" cy="41" r="3" fill="#f8fafc"/>
+                            <circle cx="33" cy="44" r="3" fill="#cbd5e1"/>
+                            <circle cx="48" cy="42" r="3" fill="#f8fafc"/>
+                            <circle cx="68" cy="76" r="3" fill="#f8fafc"/>
+                            <circle cx="72" cy="79" r="3" fill="#cbd5e1"/>
+                            <circle cx="88" cy="76" r="3" fill="#f8fafc"/>
+                        </svg>
+                    </div>
+                    <span class="text-lg sm:text-xl lg:text-2xl font-black text-emerald-950 tracking-wide text-center leading-tight">ТОҒЫЗҚҰМАЛАҚ</span>
+                    <span class="mt-2 sm:mt-3 w-full py-2 sm:py-2.5 bg-emerald-600 text-white text-sm sm:text-lg font-black rounded-2xl shadow text-center">ОЙНАУ ▶</span>
+                </button>
+
+                <!-- 3. ТЕҢГЕ ІЛУ -->
+                <button onclick="openGame('tenge')" class="card-3d h-full rounded-3xl p-3 sm:p-5 flex flex-col items-center justify-between group cursor-pointer border-b-8 border-yellow-500 hover:border-yellow-400">
+                    <div class="w-full flex-1 min-h-0 rounded-2xl bg-gradient-to-br from-sky-200 via-amber-100 to-yellow-200 flex items-center justify-center shadow-inner mb-3 relative overflow-hidden p-2">
+                        <!-- Теңге ілу SVG -->
+                        <svg viewBox="0 0 120 120" class="w-full h-full max-w-[150px] max-h-[150px] drop-shadow-lg group-hover:scale-110 transition-transform">
+                            <path d="M0,85 Q60,75 120,85 L120,120 L0,120 Z" fill="#22c55e"/>
+                            <circle cx="85" cy="78" r="16" fill="#f59e0b" stroke="#b45309" stroke-width="3"/>
+                            <circle cx="85" cy="78" r="10" fill="none" stroke="#fef08a" stroke-width="2" stroke-dasharray="4 3"/>
+                            <circle cx="48" cy="72" r="24" fill="#fbbf24" stroke="#92400e" stroke-width="3.5"/>
+                            <circle cx="48" cy="72" r="17" fill="none" stroke="#fef9c3" stroke-width="2.5"/>
+                            <path d="M48,60 L53,72 L48,84 L43,72 Z" fill="#d97706"/>
+                            <circle cx="48" cy="72" r="4" fill="#fef08a"/>
+                            <path d="M25,15 Q45,35 55,48" stroke="#dc2626" stroke-width="8" stroke-linecap="round" fill="none"/>
+                            <circle cx="57" cy="50" r="7" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
+                            <path d="M75,35 L78,42 L85,45 L78,48 L75,55 L72,48 L65,45 L72,42 Z" fill="#ffffff"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl sm:text-2xl lg:text-3xl font-black text-amber-900 tracking-wide text-center leading-tight">ТЕҢГЕ ІЛУ</span>
+                    <span class="mt-2 sm:mt-3 w-full py-2 sm:py-2.5 bg-yellow-500 text-slate-950 text-sm sm:text-lg font-black rounded-2xl shadow text-center">ОЙНАУ ▶</span>
+                </button>
+
+                <!-- 4. АРҚАН ТАРТУ -->
+                <button onclick="openGame('arkan')" class="card-3d h-full rounded-3xl p-3 sm:p-5 flex flex-col items-center justify-between group cursor-pointer border-b-8 border-rose-600 hover:border-rose-500">
+                    <div class="w-full flex-1 min-h-0 rounded-2xl bg-gradient-to-br from-rose-100 to-red-200 flex items-center justify-center shadow-inner mb-3 relative p-2">
+                        <!-- Арқан тарту SVG -->
+                        <svg viewBox="0 0 120 120" class="w-full h-full max-w-[150px] max-h-[150px] drop-shadow-lg group-hover:scale-110 transition-transform">
+                            <line x1="8" y1="70" x2="112" y2="70" stroke="#b45309" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="8" y1="70" x2="112" y2="70" stroke="#fbbf24" stroke-width="4" stroke-dasharray="8 8"/>
+                            <path d="M60,70 L52,98 L60,92 L68,98 Z" fill="#dc2626"/>
+                            <circle cx="60" cy="70" r="6" fill="#dc2626"/>
+                            <circle cx="30" cy="40" r="12" fill="#2563eb"/>
+                            <path d="M18,70 L30,52 L42,70" stroke="#2563eb" stroke-width="8" stroke-linecap="round" fill="none"/>
+                            <circle cx="90" cy="40" r="12" fill="#dc2626"/>
+                            <path d="M78,70 L90,52 L102,70" stroke="#dc2626" stroke-width="8" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl sm:text-2xl lg:text-3xl font-black text-rose-950 tracking-wide text-center leading-tight">АРҚАН ТАРТУ</span>
+                    <span class="mt-2 sm:mt-3 w-full py-2 sm:py-2.5 bg-rose-600 text-white text-sm sm:text-lg font-black rounded-2xl shadow text-center">ОЙНАУ ▶</span>
+                </button>
+
+                <!-- 5. САДАҚ АТУ (ЖАМБЫ АТУ) -->
+                <button onclick="openGame('sadak')" class="card-3d h-full rounded-3xl p-3 sm:p-5 flex flex-col items-center justify-between group cursor-pointer border-b-8 border-indigo-600 hover:border-indigo-500 col-span-2 sm:col-span-1">
+                    <div class="w-full flex-1 min-h-0 rounded-2xl bg-gradient-to-br from-indigo-100 via-purple-100 to-amber-100 flex items-center justify-center shadow-inner mb-3 relative overflow-hidden p-2">
+                        <!-- Садақ пен нысана SVG -->
+                        <svg viewBox="0 0 120 120" class="w-full h-full max-w-[150px] max-h-[150px] drop-shadow-lg group-hover:scale-110 transition-transform">
+                            <!-- Нысана (Жамбы) -->
+                            <circle cx="88" cy="34" r="22" fill="#dc2626" stroke="#fbbf24" stroke-width="3"/>
+                            <circle cx="88" cy="34" r="14" fill="#ffffff"/>
+                            <circle cx="88" cy="34" r="6" fill="#f59e0b"/>
+                            <!-- Садақ доғасы -->
+                            <path d="M22,25 Q62,60 22,95" stroke="#78350f" stroke-width="7" stroke-linecap="round" fill="none"/>
+                            <path d="M22,25 Q56,60 22,95" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                            <!-- Адырна (Жібі) -->
+                            <line x1="22" y1="25" x2="22" y2="95" stroke="#e2e8f0" stroke-width="2"/>
+                            <!-- Жебе -->
+                            <line x1="20" y1="88" x2="76" y2="42" stroke="#92400e" stroke-width="4" stroke-linecap="round"/>
+                            <polygon points="82,37 68,41 75,49" fill="#475569"/>
+                            <polygon points="20,88 12,86 16,95" fill="#dc2626"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl sm:text-2xl lg:text-3xl font-black text-indigo-950 tracking-wide text-center leading-tight">САДАҚ АТУ</span>
+                    <span class="mt-2 sm:mt-3 w-full py-2 sm:py-2.5 bg-indigo-600 text-white text-sm sm:text-lg font-black rounded-2xl shadow text-center">ОЙНАУ ▶</span>
+                </button>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== 2. ОЙЫН ЭКРАНДАРЫ КОНТЕЙНЕРІ ==================== -->
+    
+    <!-- Жоғарғы ортақ навигация панелі (Ойын ішінде көрінеді) -->
+    <div id="game-topbar" class="hidden fixed top-0 left-0 w-full z-50 px-4 py-3 flex items-center justify-between bg-slate-900/80 backdrop-blur-md border-b-2 border-amber-400">
+        <button onclick="goHome()" class="btn-3d bg-gradient-to-r from-red-500 to-rose-600 text-white font-black text-lg sm:text-xl px-6 py-3 rounded-2xl flex items-center gap-2 border-2 border-white">
+            <span>🏠</span> БАСТЫ МӘЗІР
+        </button>
+        <h2 id="current-game-title" class="text-2xl sm:text-3xl font-black text-amber-400 tracking-wider uppercase text-center"></h2>
+        <button onclick="restartCurrentGame()" class="btn-3d bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-lg sm:text-xl px-6 py-3 rounded-2xl flex items-center gap-2 border-2 border-white">
+            <span>🔄</span> ҚАЙТА БАСТАУ
+        </button>
+    </div>
+
+    <!-- ========== ОЙЫН 1: АСЫҚ АТУ (HTML5 CANVAS PHYSICS) ========== -->
+    <div id="game-asyk" class="hidden w-full h-full relative bg-gradient-to-b from-sky-300 via-amber-100 to-amber-300">
+        <canvas id="asyk-canvas" class="w-full h-full block"></canvas>
+        
+        <!-- Ұпай тақтасы -->
+        <div class="fixed top-20 left-6 bg-white/90 border-4 border-amber-500 rounded-2xl px-6 py-3 shadow-xl pointer-events-none">
+            <div class="text-sm font-bold text-slate-500">ЖИНАҒАН ҰПАЙ</div>
+            <div id="asyk-score" class="text-4xl font-black text-amber-600">0 / 5</div>
+        </div>
+        <div class="fixed top-20 right-6 bg-white/90 border-4 border-rose-500 rounded-2xl px-6 py-3 shadow-xl pointer-events-none">
+            <div class="text-sm font-bold text-slate-500">ҚАЛҒАН САҚА</div>
+            <div id="asyk-shots" class="text-4xl font-black text-rose-600">7</div>
+        </div>
+
+        <!-- Нұсқаулық -->
+        <div id="asyk-hint" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/85 text-white px-8 py-3 rounded-full text-xl font-bold border-2 border-amber-400 pointer-events-none text-center">
+            🎯 Қызыл САҚАНЫ саусағыңмен артқа тартып, асықтарға қарай жібер!
+        </div>
+    </div>
+
+    <!-- ========== ОЙЫН 2: ТОҒЫЗҚҰМАЛАҚ (2 ОЙЫНШЫ НЕМЕСЕ КОМПЬЮТЕР) ========== -->
+    <div id="game-togyz" class="hidden w-full h-full pt-20 pb-4 px-4 flex flex-col justify-between bg-gradient-to-br from-amber-900 via-yellow-900 to-stone-900">
+        
+        <!-- Режим таңдау және Ақпарат панелі -->
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-black/40 p-3 rounded-2xl border border-amber-500/40">
+            <div class="flex items-center gap-3">
+                <span class="text-amber-300 font-bold text-lg">Режим:</span>
+                <button id="togyz-mode-pvp" onclick="setTogyzMode('pvp')" class="px-4 py-2 rounded-xl font-black text-base bg-amber-500 text-slate-900 shadow">👥 2 ОЙЫНШЫ</button>
+                <button id="togyz-mode-ai" onclick="setTogyzMode('ai')" class="px-4 py-2 rounded-xl font-black text-base bg-slate-700 text-white shadow">🤖 РОБОТПЕН</button>
+            </div>
+            <div id="togyz-turn-indicator" class="px-6 py-2 rounded-full bg-emerald-500 text-white font-black text-xl shadow-lg animate-pulse">
+                1-ОЙЫНШЫНЫҢ КЕЗЕГІ (Төменгі қатар)
+            </div>
+            <div class="text-amber-200 font-bold text-lg">
+                Жеңіс үшін: <span class="text-yellow-400 font-black">82 құмалақ</span>
+            </div>
+        </div>
+
+        <!-- Тоғызқұмалақ тақтасы -->
+        <div class="flex-1 my-3 bg-gradient-to-b from-amber-700 to-amber-800 rounded-3xl p-4 sm:p-6 border-8 border-amber-500 shadow-2xl flex flex-col justify-between">
+            
+            <!-- 2-ойыншы отаулары (Жоғарғы қатар: 9-дан 1-ге қарай солдан оңға) -->
+            <div class="grid grid-cols-9 gap-2 sm:gap-3 h-1/3" id="togyz-row-top">
+                <!-- JS арқылы толтырылады -->
+            </div>
+
+            <!-- Ортаңғы ҚАЗАНДАР -->
+            <div class="grid grid-cols-2 gap-6 my-3 h-1/4">
+                <div class="kazan rounded-2xl p-3 flex flex-col items-center justify-center relative">
+                    <span class="text-amber-300 font-black text-sm sm:text-lg">2-ОЙЫНШЫ ҚАЗАНЫ (Жоғарғы)</span>
+                    <div id="kazan-2-count" class="text-3xl sm:text-5xl font-black text-white my-1">0</div>
+                    <div id="kazan-2-dots" class="flex flex-wrap justify-center max-w-full overflow-hidden h-6"></div>
+                </div>
+                <div class="kazan rounded-2xl p-3 flex flex-col items-center justify-center relative">
+                    <span class="text-emerald-300 font-black text-sm sm:text-lg">1-ОЙЫНШЫ ҚАЗАНЫ (Төменгі)</span>
+                    <div id="kazan-1-count" class="text-3xl sm:text-5xl font-black text-white my-1">0</div>
+                    <div id="kazan-1-dots" class="flex flex-wrap justify-center max-w-full overflow-hidden h-6"></div>
+                </div>
+            </div>
+
+            <!-- 1-ойыншы отаулары (Төменгі қатар: 1-ден 9-ға қарай солдан оңға) -->
+            <div class="grid grid-cols-9 gap-2 sm:gap-3 h-1/3" id="togyz-row-bottom">
+                <!-- JS арқылы толтырылады -->
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========== ОЙЫН 3: ТЕҢГЕ ІЛУ (АТ ҮСТІНЕН ТЕҢГЕ ЖИНАУ ОЙЫНЫ) ========== -->
+    <div id="game-tenge" class="hidden w-full h-full pt-16 relative bg-gradient-to-b from-sky-400 via-sky-200 to-emerald-500 overflow-hidden">
+        <canvas id="tenge-canvas" class="w-full h-full block"></canvas>
+
+        <!-- Жоғарғы ұпай және уақыт тақтасы -->
+        <div class="fixed top-20 left-6 bg-white/95 border-4 border-amber-500 rounded-2xl px-6 py-2 shadow-xl pointer-events-none flex items-center gap-3">
+            <span class="text-3xl">🪙</span>
+            <div>
+                <div class="text-xs font-bold text-slate-500 uppercase">ЖИНАҒАН ТЕҢГЕ</div>
+                <div id="tenge-score" class="text-3xl sm:text-4xl font-black text-amber-600">0</div>
+            </div>
+        </div>
+
+        <div class="fixed top-20 left-1/2 -translate-x-1/2 bg-indigo-950/90 border-2 border-amber-400 rounded-full px-6 py-2 text-base sm:text-xl font-black text-amber-300 shadow-lg pointer-events-none text-center hidden md:block">
+            🐎 Тұлпар шауып келе жатқанда, экранды БАСЫП теңгені іліп ал!
+        </div>
+
+        <div class="fixed top-20 right-6 bg-white/95 border-4 border-emerald-500 rounded-2xl px-6 py-2 shadow-xl pointer-events-none flex items-center gap-3">
+            <span class="text-3xl">⏱️</span>
+            <div>
+                <div class="text-xs font-bold text-slate-500 uppercase">ҚАЛҒАН УАҚЫТ</div>
+                <div id="tenge-timer" class="text-3xl sm:text-4xl font-black text-emerald-600">40 с</div>
+            </div>
+        </div>
+
+        <!-- Төменгі үлкен сенсорлық ТЕҢГЕ ІЛУ батырмасы -->
+        <div class="fixed bottom-5 left-1/2 -translate-x-1/2 w-full max-w-xl px-6 z-30">
+            <button onpointerdown="grabTengeAction()" class="w-full btn-3d bg-gradient-to-b from-amber-400 via-yellow-500 to-orange-500 active:from-amber-500 text-slate-950 font-black text-2xl sm:text-4xl py-5 sm:py-6 rounded-3xl border-4 border-white shadow-2xl flex items-center justify-center gap-4 cursor-pointer">
+                <span>🖐️ ТЕҢГЕНІ ІЛІП АЛ!</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== ОЙЫН 4: АРҚАН ТАРТУ (2 КОМАНДА ЖАРЫСЫ) ========== -->
+    <div id="game-arkan" class="hidden w-full h-full pt-20 flex flex-col justify-between bg-gradient-to-b from-sky-300 via-sky-100 to-emerald-500 relative overflow-hidden">
+        
+        <!-- Жоғарғы ұпай және есеп -->
+        <div class="flex justify-around items-center px-6 pt-2 z-20">
+            <div class="bg-blue-600 text-white px-8 py-3 rounded-3xl border-4 border-white shadow-xl text-center">
+                <div class="text-sm font-bold uppercase">1-КОМАНДА (КӨК)</div>
+                <div id="arkan-score-left" class="text-4xl font-black">0</div>
+            </div>
+            <div class="bg-white/90 px-6 py-2 rounded-2xl border-2 border-amber-500 text-center shadow">
+                <div class="text-slate-700 font-black text-lg">КІМ ЖЫЛДАМ БАСАДЫ?!</div>
+                <div class="text-amber-600 font-bold text-sm">Өз батырмаңды тоқтамай бас!</div>
+            </div>
+            <div class="bg-red-600 text-white px-8 py-3 rounded-3xl border-4 border-white shadow-xl text-center">
+                <div class="text-sm font-bold uppercase">2-КОМАНДА (ҚЫЗЫЛ)</div>
+                <div id="arkan-score-right" class="text-4xl font-black">0</div>
+            </div>
+        </div>
+
+        <!-- Ортадағы Арқан және Балалар анимациясы -->
+        <div class="relative flex-1 flex items-center justify-center overflow-hidden">
+            <!-- Орталық меже сызығы -->
+            <div class="absolute h-full w-2 bg-dashed border-l-4 border-dashed border-amber-500 left-1/2 -translate-x-1/2 z-10"></div>
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 font-black px-4 py-1 rounded-full text-sm z-10 shadow">МЕЖЕ</div>
+
+            <!-- Қозғалатын арқан мен кейіпкерлер тобы -->
+            <div id="arkan-rope-group" class="relative flex items-center justify-center transition-transform duration-75" style="transform: translateX(0px);">
+                <svg viewBox="0 0 900 240" class="w-[900px] max-w-none h-60 drop-shadow-xl">
+                    <!-- Ұзын арқан -->
+                    <line x1="50" y1="140" x2="850" y2="140" stroke="#92400e" stroke-width="14" stroke-linecap="round"/>
+                    <line x1="50" y1="140" x2="850" y2="140" stroke="#f59e0b" stroke-width="6" stroke-dasharray="14 10"/>
+                    
+                    <!-- Ортадағы қызыл жалауша (Жеңіс белгісі) -->
+                    <path d="M450,140 L435,195 L450,180 L465,195 Z" fill="#dc2626"/>
+                    <circle cx="450" cy="140" r="10" fill="#fbbf24" stroke="#dc2626" stroke-width="4"/>
+
+                    <!-- СОЛ ЖАҚ КОМАНДА (Көк түсті 3 бала) -->
+                    <g transform="translate(140, 50)">
+                        <circle cx="40" cy="40" r="22" fill="#fde68a"/>
+                        <path d="M20,28 Q40,8 60,28 Z" fill="#1d4ed8"/>
+                        <rect x="20" y="65" width="40" height="60" rx="12" fill="#2563eb"/>
+                        <line x1="45" y1="85" x2="90" y2="90" stroke="#2563eb" stroke-width="14" stroke-linecap="round"/>
+                    </g>
+                    <g transform="translate(240, 50)">
+                        <circle cx="40" cy="40" r="22" fill="#fde68a"/>
+                        <path d="M20,28 Q40,8 60,28 Z" fill="#1d4ed8"/>
+                        <rect x="20" y="65" width="40" height="60" rx="12" fill="#3b82f6"/>
+                        <line x1="45" y1="85" x2="90" y2="90" stroke="#3b82f6" stroke-width="14" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- ОҢ ЖАҚ КОМАНДА (Қызыл түсті 3 бала) -->
+                    <g transform="translate(580, 50)">
+                        <circle cx="40" cy="40" r="22" fill="#fde68a"/>
+                        <path d="M20,28 Q40,8 60,28 Z" fill="#b91c1c"/>
+                        <rect x="20" y="65" width="40" height="60" rx="12" fill="#dc2626"/>
+                        <line x1="35" y1="85" x2="-10" y2="90" stroke="#dc2626" stroke-width="14" stroke-linecap="round"/>
+                    </g>
+                    <g transform="translate(680, 50)">
+                        <circle cx="40" cy="40" r="22" fill="#fde68a"/>
+                        <path d="M20,28 Q40,8 60,28 Z" fill="#b91c1c"/>
+                        <rect x="20" y="65" width="40" height="60" rx="12" fill="#ef4444"/>
+                        <line x1="35" y1="85" x2="-10" y2="90" stroke="#ef4444" stroke-width="14" stroke-linecap="round"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Төменгі екі үлкен сенсорлық ТАРТУ батырмасы -->
+        <div class="grid grid-cols-2 gap-6 p-6 z-20 bg-emerald-800/40 backdrop-blur-sm border-t-4 border-white/40">
+            <button onpointerdown="pullRope('left')" class="btn-3d bg-gradient-to-b from-blue-500 to-blue-700 hover:from-blue-400 hover:to-blue-600 text-white font-black text-3xl sm:text-5xl py-8 sm:py-10 rounded-3xl border-4 border-white flex flex-col items-center justify-center gap-2 cursor-pointer">
+                <span>⬅️ ТАРТ! (КӨК)</span>
+                <span class="text-base sm:text-lg font-bold text-blue-100">САУСАҚПЕН ЖЫЛДАМ БАС!</span>
+            </button>
+            <button onpointerdown="pullRope('right')" class="btn-3d bg-gradient-to-b from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white font-black text-3xl sm:text-5xl py-8 sm:py-10 rounded-3xl border-4 border-white flex flex-col items-center justify-center gap-2 cursor-pointer">
+                <span>ТАРТ! (ҚЫЗЫЛ) ➡️</span>
+                <span class="text-base sm:text-lg font-bold text-red-100">САУСАҚПЕН ЖЫЛДАМ БАС!</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== ОЙЫН 5: САДАҚ АТУ (ЖАМБЫ АТУ - HTML5 CANVAS) ========== -->
+    <div id="game-sadak" class="hidden w-full h-full relative bg-gradient-to-b from-sky-400 via-sky-200 to-emerald-400 overflow-hidden">
+        <canvas id="sadak-canvas" class="w-full h-full block"></canvas>
+
+        <!-- Жоғарғы ұпай тақтасы -->
+        <div class="fixed top-20 left-6 bg-white/95 border-4 border-indigo-500 rounded-2xl px-6 py-2 shadow-xl pointer-events-none">
+            <div class="text-xs font-bold text-slate-500 uppercase">ЖИНАҒАН ҰПАЙ</div>
+            <div id="sadak-score" class="text-3xl sm:text-4xl font-black text-indigo-700">0</div>
+        </div>
+
+        <div class="fixed top-20 right-6 bg-white/95 border-4 border-amber-500 rounded-2xl px-6 py-2 shadow-xl pointer-events-none">
+            <div class="text-xs font-bold text-slate-500 uppercase">ҚАЛҒАН ЖЕБЕ</div>
+            <div id="sadak-arrows" class="text-3xl sm:text-4xl font-black text-amber-600">8</div>
+        </div>
+
+        <!-- Нұсқаулық -->
+        <div class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-indigo-950/90 text-white px-8 py-3 rounded-full text-lg sm:text-xl font-bold border-2 border-amber-400 pointer-events-none text-center shadow-xl">
+            🏹 Садақты саусағыңмен артқа тартып, бағанадағы ЖАМБЫ нысанасына дәлдеп жібер!
+        </div>
+    </div>
+
+    <!-- ==================== 3. ЖЕҢІС / НӘТИЖЕ МОДАЛЬДЫ ТЕРЕЗЕСІ ==================== -->
+    <div id="result-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-6">
+        <div class="bg-gradient-to-b from-amber-300 via-yellow-100 to-white border-8 border-amber-500 rounded-3xl p-8 max-w-xl w-full text-center shadow-2xl transform scale-100">
+            <div id="modal-emoji" class="text-7xl mb-4 animate-bounce">🏆</div>
+            <h3 id="modal-title" class="text-4xl font-black text-amber-900 mb-3">ТАМАША ЖЕҢІС!</h3>
+            <p id="modal-desc" class="text-xl font-bold text-slate-700 mb-8">Сен барлық асықтарды дәл тигіздің!</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="restartCurrentGame()" class="btn-3d bg-gradient-to-r from-emerald-500 to-green-600 text-white font-black text-2xl px-8 py-4 rounded-2xl border-2 border-white">
+                    🔄 ҚАЙТА ОЙНАУ
+                </button>
+                <button onclick="goHome()" class="btn-3d bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-black text-2xl px-8 py-4 rounded-2xl border-2 border-white">
+                    🏠 БАСТЫ МӘЗІР
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==================== ДЫБЫС ЭФФЕКТІЛЕРІ (ИНТЕРНЕТСІЗ WEB AUDIO API) ==================== */
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function playTone(freq, type = 'sine', duration = 0.15, vol = 0.2) {
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playClickSound() { playTone(520, 'triangle', 0.08, 0.2); }
+        function playHitSound() { playTone(220, 'square', 0.15, 0.25); setTimeout(() => playTone(440, 'sine', 0.2, 0.2), 60); }
+        function playWinSound() {
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((n, i) => setTimeout(() => playTone(n, 'triangle', 0.3, 0.25), i * 120));
+        }
+
+        /* ==================== НАВИГАЦИЯ ЖҮЙЕСІ ==================== */
+        let currentGame = null;
+        const gameTitles = {
+            asyk: '🎯 АСЫҚ АТУ',
+            togyz: '🧠 ТОҒЫЗҚҰМАЛАҚ',
+            tenge: '🐎 ТЕҢГЕ ІЛУ',
+            arkan: '💪 АРҚАН ТАРТУ',
+            sadak: '🏹 САДАҚ АТУ (ЖАМБЫ)'
+        };
+
+        function openGame(gameId) {
+            playClickSound();
+            currentGame = gameId;
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('result-modal').classList.add('hidden');
+            document.getElementById('game-topbar').classList.remove('hidden');
+            document.getElementById('current-game-title').innerText = gameTitles[gameId];
+
+            ['asyk', 'togyz', 'tenge', 'arkan', 'sadak'].forEach(id => {
+                document.getElementById('game-' + id).classList.add('hidden');
+            });
+
+            document.getElementById('game-' + gameId).classList.remove('hidden');
+
+            if (gameId === 'asyk') initAsykGame();
+            if (gameId === 'togyz') initTogyzGame();
+            if (gameId === 'tenge') initTengeGame();
+            if (gameId === 'arkan') initArkanGame();
+            if (gameId === 'sadak') initSadakGame();
+        }
+
+        function goHome() {
+            playClickSound();
+            stopAllIntervals();
+            currentGame = null;
+            document.getElementById('game-topbar').classList.add('hidden');
+            document.getElementById('result-modal').classList.add('hidden');
+            ['asyk', 'togyz', 'tenge', 'arkan', 'sadak'].forEach(id => {
+                document.getElementById('game-' + id).classList.add('hidden');
+            });
+            document.getElementById('main-menu').classList.remove('hidden');
+        }
+
+        function restartCurrentGame() {
+            playClickSound();
+            document.getElementById('result-modal').classList.add('hidden');
+            if (currentGame) openGame(currentGame);
+        }
+
+        function showResultModal(emoji, title, desc) {
+            playWinSound();
+            document.getElementById('modal-emoji').innerText = emoji;
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('result-modal').classList.remove('hidden');
+        }
+
+        let tengeTimerInterval = null;
+        let tengeAnimFrame = null;
+        let asykAnimFrame = null;
+        let sadakAnimFrame = null;
+        function stopAllIntervals() {
+            if (tengeTimerInterval) clearInterval(tengeTimerInterval);
+            if (tengeAnimFrame) cancelAnimationFrame(tengeAnimFrame);
+            if (asykAnimFrame) cancelAnimationFrame(asykAnimFrame);
+            if (sadakAnimFrame) cancelAnimationFrame(sadakAnimFrame);
+        }
+
+        /* ==================== 1. АСЫҚ АТУ ОЙЫНЫ ЛОГИКАСЫ ==================== */
+        let asykCanvas, asykCtx;
+        let saqa = { x: 0, y: 0, startX: 0, startY: 0, vx: 0, vy: 0, radius: 28, isDragging: false, isFlying: false };
+        let targets = [];
+        let asykScore = 0;
+        let asykShots = 7;
+
+        function initAsykGame() {
+            stopAllIntervals();
+            asykCanvas = document.getElementById('asyk-canvas');
+            asykCtx = asykCanvas.getContext('2d');
+            resizeAsykCanvas();
+            window.addEventListener('resize', resizeAsykCanvas);
+
+            asykScore = 0;
+            asykShots = 7;
+            updateAsykUI();
+            setupAsykEntities();
+
+            // Сенсорлық және тінтуір оқиғалары
+            asykCanvas.onpointerdown = (e) => {
+                if (saqa.isFlying || asykShots <= 0) return;
+                const rect = asykCanvas.getBoundingClientRect();
+                const px = e.clientX - rect.left;
+                const py = e.clientY - rect.top;
+                const dist = Math.hypot(px - saqa.x, py - saqa.y);
+                if (dist < 80) {
+                    saqa.isDragging = true;
+                }
+            };
+
+            asykCanvas.onpointermove = (e) => {
+                if (!saqa.isDragging) return;
+                const rect = asykCanvas.getBoundingClientRect();
+                const px = e.clientX - rect.left;
+                const py = e.clientY - rect.top;
+                const dx = px - saqa.startX;
+                const dy = py - saqa.startY;
+                const maxPull = 160;
+                const dist = Math.hypot(dx, dy);
+                if (dist > maxPull) {
+                    saqa.x = saqa.startX + (dx / dist) * maxPull;
+                    saqa.y = saqa.startY + (dy / dist) * maxPull;
+                } else {
+                    saqa.x = px;
+                    saqa.y = py;
+                }
+            };
+
+            asykCanvas.onpointerup = () => {
+                if (!saqa.isDragging) return;
+                saqa.isDragging = false;
+                const dx = saqa.startX - saqa.x;
+                const dy = saqa.startY - saqa.y;
+                if (Math.hypot(dx, dy) > 25) {
+                    saqa.vx = dx * 0.16;
+                    saqa.vy = dy * 0.16;
+                    saqa.isFlying = true;
+                    asykShots--;
+                    updateAsykUI();
+                    playClickSound();
+                } else {
+                    saqa.x = saqa.startX;
+                    saqa.y = saqa.startY;
+                }
+            };
+
+            asykLoop();
+        }
+
+        function resizeAsykCanvas() {
+            if (!asykCanvas) return;
+            asykCanvas.width = window.innerWidth;
+            asykCanvas.height = window.innerHeight;
+            saqa.startX = asykCanvas.width * 0.22;
+            saqa.startY = asykCanvas.height * 0.65;
+            if (!saqa.isDragging && !saqa.isFlying) {
+                saqa.x = saqa.startX;
+                saqa.y = saqa.startY;
+            }
+        }
+
+        function setupAsykEntities() {
+            const w = asykCanvas.width;
+            const h = asykCanvas.height;
+            saqa.startX = w * 0.22;
+            saqa.startY = h * 0.65;
+            saqa.x = saqa.startX;
+            saqa.y = saqa.startY;
+            saqa.vx = 0;
+            saqa.vy = 0;
+            saqa.isFlying = false;
+
+            targets = [];
+            const baseX = w * 0.68;
+            const groundY = h * 0.78;
+            // 5 асық тізіліп тұрады (Көн)
+            for (let i = 0; i < 5; i++) {
+                targets.push({
+                    x: baseX + i * 48,
+                    y: groundY - 22,
+                    vx: 0,
+                    vy: 0,
+                    radius: 22,
+                    knocked: false,
+                    color: i === 2 ? '#fbbf24' : '#f59e0b' // Ортадағы Хан асық алтын түсті
+                });
+            }
+        }
+
+        function updateAsykUI() {
+            document.getElementById('asyk-score').innerText = `${asykScore} / 5`;
+            document.getElementById('asyk-shots').innerText = asykShots;
+        }
+
+        // Нақты кәдімгі қой асығының пішінін салу функциясы (алшы, тәйке, бүк, шік бедерлерімен)
+        function drawAsykShape(ctx, x, y, r, color, isSaqa = false, angle = 0) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            const s = r / 24;
+            ctx.scale(s, s);
+
+            // Асықтың көлеңкесі
+            ctx.shadowColor = 'rgba(0,0,0,0.35)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetY = 5;
+
+            // Негізгі сүйек сұлбасы (4 бұрышты буынды нақты асық контуры)
+            ctx.fillStyle = color;
+            ctx.strokeStyle = isSaqa ? '#450a0a' : '#78350f';
+            ctx.lineWidth = 3;
+
+            ctx.beginPath();
+            ctx.moveTo(-18, -24);
+            // Жоғарғы ойық (Асықтың басы)
+            ctx.bezierCurveTo(-10, -28, -5, -18, 0, -18);
+            ctx.bezierCurveTo(5, -18, 10, -28, 18, -24);
+            // Оң жақ бүйір буыны
+            ctx.bezierCurveTo(26, -20, 26, -8, 20, 0);
+            ctx.bezierCurveTo(26, 8, 26, 22, 16, 26);
+            // Төменгі ойық
+            ctx.bezierCurveTo(8, 29, 4, 20, 0, 20);
+            ctx.bezierCurveTo(-4, 20, -8, 29, -16, 26);
+            // Сол жақ бүйір буыны
+            ctx.bezierCurveTo(-26, 22, -26, 8, -20, 0);
+            ctx.bezierCurveTo(-26, -8, -26, -20, -18, -24);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Көлеңкені өшіріп, ішкі сүйек бедерлерін салу
+            ctx.shadowColor = 'transparent';
+
+            // Асықтың ортаңғы шұңқыры (Алшы/Тәйке ойығы)
+            ctx.fillStyle = isSaqa ? 'rgba(69, 10, 10, 0.28)' : 'rgba(120, 53, 15, 0.22)';
+            ctx.beginPath();
+            ctx.ellipse(0, 2, 11, 7, 0.15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Иілген сүйек қыры (Бедер сызығы)
+            ctx.strokeStyle = isSaqa ? 'rgba(254, 202, 202, 0.75)' : 'rgba(255, 255, 255, 0.75)';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(-12, -8);
+            ctx.quadraticCurveTo(0, -1, 12, -9);
+            ctx.stroke();
+
+            // Жоғарғы жарық жылтыры (3D көлем беру үшін)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.ellipse(-11, -15, 4, 2.5, -0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function asykLoop() {
+            if (currentGame !== 'asyk') return;
+            const w = asykCanvas.width;
+            const h = asykCanvas.height;
+            const groundY = h * 0.78;
+
+            asykCtx.clearRect(0, 0, w, h);
+
+            // Дала фоны мен жер
+            asykCtx.fillStyle = '#d97706';
+            asykCtx.fillRect(0, groundY, w, h - groundY);
+            asykCtx.fillStyle = '#16a34a';
+            asykCtx.fillRect(0, groundY - 8, w, 12);
+
+            // Көн сызығы (Асықтар тұратын шеңбер)
+            asykCtx.strokeStyle = '#dc2626';
+            asykCtx.lineWidth = 5;
+            asykCtx.beginPath();
+            asykCtx.moveTo(w * 0.62, groundY);
+            asykCtx.lineTo(w * 0.92, groundY);
+            asykCtx.stroke();
+
+            // Тарту сызығы (Рогатка / Бағыттауыш)
+            if (saqa.isDragging) {
+                asykCtx.strokeStyle = '#dc2626';
+                asykCtx.lineWidth = 5;
+                asykCtx.setLineDash([10, 8]);
+                asykCtx.beginPath();
+                asykCtx.moveTo(saqa.startX, saqa.startY);
+                asykCtx.lineTo(saqa.x, saqa.y);
+                asykCtx.stroke();
+                asykCtx.setLineDash([]);
+
+                // Болжамды траектория нүктелері
+                const simVx = (saqa.startX - saqa.x) * 0.16;
+                const simVy = (saqa.startY - saqa.y) * 0.16;
+                asykCtx.fillStyle = 'rgba(220, 38, 38, 0.5)';
+                for (let t = 1; t <= 12; t++) {
+                    const px = saqa.startX + simVx * t * 2;
+                    const py = saqa.startY + simVy * t * 2 + 0.5 * 0.45 * Math.pow(t * 2, 2);
+                    asykCtx.beginPath();
+                    asykCtx.arc(px, py, 5, 0, Math.PI * 2);
+                    asykCtx.fill();
+                }
+            }
+
+            // Сақа физикасы
+            if (saqa.isFlying) {
+                saqa.vy += 0.45; // Гравитация
+                saqa.x += saqa.vx;
+                saqa.y += saqa.vy;
+
+                if (saqa.y + saqa.radius > groundY) {
+                    saqa.y = groundY - saqa.radius;
+                    saqa.vy *= -0.55;
+                    saqa.vx *= 0.82;
+                }
+
+                // Асықтармен соқтығысу
+                targets.forEach(t => {
+                    const dist = Math.hypot(saqa.x - t.x, saqa.y - t.y);
+                    if (dist < saqa.radius + t.radius) {
+                        playHitSound();
+                        t.vx = saqa.vx * 0.9 + 5;
+                        t.vy = -8;
+                        saqa.vx *= 0.6;
+                        if (!t.knocked) {
+                            t.knocked = true;
+                            asykScore++;
+                            updateAsykUI();
+                        }
+                    }
+                });
+
+                // Сақа тоқтағанда немесе экраннан шыққанда
+                if (saqa.x > w + 50 || (Math.abs(saqa.vx) < 0.4 && Math.abs(saqa.vy) < 0.5 && saqa.y >= groundY - saqa.radius - 2)) {
+                    saqa.isFlying = false;
+                    saqa.x = saqa.startX;
+                    saqa.y = saqa.startY;
+                    saqa.vx = 0;
+                    saqa.vy = 0;
+
+                    if (asykScore >= 5) {
+                        setTimeout(() => showResultModal('🏆', 'МЕРГЕН ЕКЕНСІҢ!', 'Барлық 5 асықты дәл атып түсірдің!'), 300);
+                    } else if (asykShots <= 0) {
+                        setTimeout(() => showResultModal('🎯', 'ОЙЫН АЯҚТАЛДЫ!', `Сен ${asykScore} асық ұтып алдың! Тағы ойнап көр!`), 300);
+                    }
+                }
+            }
+
+            // Асықтарды салу және қозғалту
+            targets.forEach((t, idx) => {
+                if (t.knocked) {
+                    t.vy += 0.5;
+                    t.x += t.vx;
+                    t.y += t.vy;
+                    t.angle = (t.angle || 0) + t.vx * 0.05;
+                    if (t.y + t.radius > groundY) {
+                        t.y = groundY - t.radius;
+                        t.vy *= -0.4;
+                        t.vx *= 0.85;
+                    }
+                }
+                const baseAngle = t.knocked ? t.angle : (idx % 2 === 0 ? -0.15 : 0.15);
+                drawAsykShape(asykCtx, t.x, t.y, t.radius, t.knocked ? '#94a3b8' : t.color, false, baseAngle);
+            });
+
+            // Қызыл Сақаны салу
+            const saqaAngle = saqa.isFlying ? (saqa.x * 0.04) : -0.2;
+            drawAsykShape(asykCtx, saqa.x, saqa.y, saqa.radius, '#dc2626', true, saqaAngle);
+
+            asykAnimFrame = requestAnimationFrame(asykLoop);
+        }
+
+        /* ==================== 2. ТОҒЫЗҚҰМАЛАҚ ОЙЫНЫ ЛОГИКАСЫ ==================== */
+        // pits[0..8] -> 1-ойыншы (төменгі), pits[9..17] -> 2-ойыншы (жоғарғы)
+        let togyzState = {
+            pits: Array(18).fill(9),
+            kazan: [0, 0],
+            tuzdyk: [-1, -1], // tuzdyk[0] = 1-ойыншының 2-ойыншы жақтағы тұздығы (индекс 9..17)
+            turn: 0, // 0 = 1-ойыншы, 1 = 2-ойыншы
+            mode: 'pvp', // 'pvp' немесе 'ai'
+            busy: false
+        };
+
+        function setTogyzMode(mode) {
+            playClickSound();
+            togyzState.mode = mode;
+            document.getElementById('togyz-mode-pvp').className = mode === 'pvp'
+                ? 'px-4 py-2 rounded-xl font-black text-base bg-amber-500 text-slate-900 shadow'
+                : 'px-4 py-2 rounded-xl font-black text-base bg-slate-700 text-white shadow';
+            document.getElementById('togyz-mode-ai').className = mode === 'ai'
+                ? 'px-4 py-2 rounded-xl font-black text-base bg-amber-500 text-slate-900 shadow'
+                : 'px-4 py-2 rounded-xl font-black text-base bg-slate-700 text-white shadow';
+            initTogyzGame();
+        }
+
+        function initTogyzGame() {
+            togyzState.pits = Array(18).fill(9);
+            togyzState.kazan = [0, 0];
+            togyzState.tuzdyk = [-1, -1];
+            togyzState.turn = 0;
+            togyzState.busy = false;
+            renderTogyzBoard();
+        }
+
+        function renderTogyzBoard() {
+            const topRow = document.getElementById('togyz-row-top');
+            const bottomRow = document.getElementById('togyz-row-bottom');
+            topRow.innerHTML = '';
+            bottomRow.innerHTML = '';
+
+            // Жоғарғы қатар: 2-ойыншы (индекстер 17-ден 9-ға дейін солдан оңға)
+            for (let i = 17; i >= 9; i--) {
+                const pitNum = i - 8; // 9..1
+                const isTuzdyk = (togyzState.tuzdyk[0] === i);
+                const div = createOtauElement(i, pitNum, togyzState.pits[i], 1, isTuzdyk);
+                topRow.appendChild(div);
+            }
+
+            // Төменгі қатар: 1-ойыншы (индекстер 0-ден 8-ге дейін солдан оңға)
+            for (let i = 0; i <= 8; i++) {
+                const pitNum = i + 1; // 1..9
+                const isTuzdyk = (togyzState.tuzdyk[1] === i);
+                const div = createOtauElement(i, pitNum, togyzState.pits[i], 0, isTuzdyk);
+                bottomRow.appendChild(div);
+            }
+
+            // Қазандарды жаңарту
+            document.getElementById('kazan-1-count').innerText = togyzState.kazan[0];
+            document.getElementById('kazan-2-count').innerText = togyzState.kazan[1];
+
+            const indicator = document.getElementById('togyz-turn-indicator');
+            if (togyzState.turn === 0) {
+                indicator.innerText = '1-ОЙЫНШЫНЫҢ КЕЗЕГІ (Төменгі қатар)';
+                indicator.className = 'px-6 py-2 rounded-full bg-emerald-500 text-white font-black text-lg sm:text-xl shadow-lg';
+            } else {
+                indicator.innerText = togyzState.mode === 'ai' ? '🤖 РОБОТ ОЙЛАНУДА...' : '2-ОЙЫНШЫНЫҢ КЕЗЕГІ (Жоғарғы қатар)';
+                indicator.className = 'px-6 py-2 rounded-full bg-amber-500 text-slate-950 font-black text-lg sm:text-xl shadow-lg';
+            }
+        }
+
+        function createOtauElement(index, labelNum, count, owner, isTuzdyk) {
+            const btn = document.createElement('button');
+            const canPlay = !togyzState.busy && togyzState.turn === owner && count > 0 && !isTuzdyk && !(togyzState.mode === 'ai' && owner === 1);
+            
+            btn.className = `otau rounded-2xl p-1 sm:p-2 flex flex-col items-center justify-between relative transition-all ${canPlay ? 'cursor-pointer ring-4 ring-yellow-300/70' : 'opacity-90 cursor-default'}`;
+            if (canPlay) {
+                btn.onclick = () => makeTogyzMove(index);
+            }
+
+            let dotsHtml = '';
+            const showDots = Math.min(count, 16);
+            for (let d = 0; d < showDots; d++) {
+                dotsHtml += '<span class="kumalak"></span>';
+            }
+
+            btn.innerHTML = `
+                <div class="w-full flex justify-between items-center px-1">
+                    <span class="text-xs font-bold text-amber-300">${labelNum}</span>
+                    ${isTuzdyk ? '<span class="tuzdyk-badge text-[10px] px-1.5 rounded">ТҰЗДЫҚ</span>' : ''}
+                </div>
+                <div class="flex flex-wrap justify-center items-center content-center overflow-hidden my-auto max-h-14">
+                    ${dotsHtml}
+                </div>
+                <div class="bg-black/60 text-white font-black text-base sm:text-xl px-3 py-0.5 rounded-full border border-amber-400/50">
+                    ${count}
+                </div>
+            `;
+            return btn;
+        }
+
+        function makeTogyzMove(startIndex) {
+            if (togyzState.busy) return;
+            let seeds = togyzState.pits[startIndex];
+            if (seeds === 0) return;
+
+            playClickSound();
+            togyzState.busy = true;
+            const player = togyzState.turn;
+            let currentIdx = startIndex;
+
+            if (seeds === 1) {
+                togyzState.pits[startIndex] = 0;
+                currentIdx = (startIndex + 1) % 18;
+                dropSeed(currentIdx, player);
+            } else {
+                togyzState.pits[startIndex] = 1;
+                seeds -= 1;
+                while (seeds > 0) {
+                    currentIdx = (currentIdx + 1) % 18;
+                    dropSeed(currentIdx, player);
+                    seeds--;
+                }
+            }
+
+            // Соңғы құмалақ түскен отауды тексеру (Қарсылас жақта болса)
+            const isOpponentSide = (player === 0 && currentIdx >= 9) || (player === 1 && currentIdx <= 8);
+            if (isOpponentSide) {
+                const finalCount = togyzState.pits[currentIdx];
+                // Жұп болса ұтып алады
+                if (finalCount % 2 === 0) {
+                    togyzState.kazan[player] += finalCount;
+                    togyzState.pits[currentIdx] = 0;
+                    playHitSound();
+                } 
+                // 3 құмалақ болса ТҰЗДЫҚ алу ережесі (9-шы отаудан басқа, және бұрын тұздық алмаған болса)
+                else if (finalCount === 3 && togyzState.tuzdyk[player] === -1) {
+                    const isNinthPit = (currentIdx === 8 || currentIdx === 17);
+                    const oppTuzdyk = togyzState.tuzdyk[1 - player];
+                    const symmetricIdx = (currentIdx + 9) % 18;
+                    if (!isNinthPit && oppTuzdyk !== symmetricIdx) {
+                        togyzState.tuzdyk[player] = currentIdx;
+                        togyzState.kazan[player] += 3;
+                        togyzState.pits[currentIdx] = 0;
+                        playWinSound();
+                    }
+                }
+            }
+
+            // Жеңімпазды тексеру
+            if (togyzState.kazan[0] >= 82) {
+                renderTogyzBoard();
+                showResultModal('🏆', '1-ОЙЫНШЫ ЖЕҢДІ!', `Құттықтаймыз! Есеп: ${togyzState.kazan[0]} : ${togyzState.kazan[1]}`);
+                return;
+            }
+            if (togyzState.kazan[1] >= 82) {
+                renderTogyzBoard();
+                const winnerName = togyzState.mode === 'ai' ? 'РОБОТ ЖЕҢДІ!' : '2-ОЙЫНШЫ ЖЕҢДІ!';
+                showResultModal('🏆', winnerName, `Есеп: ${togyzState.kazan[1]} : ${togyzState.kazan[0]}`);
+                return;
+            }
+
+            // Кезек ауыстыру
+            togyzState.turn = 1 - player;
+            togyzState.busy = false;
+            renderTogyzBoard();
+
+            // Егер келесі ойыншыда жүріс қалмаса
+            const nextRange = togyzState.turn === 0 ? [0, 8] : [9, 17];
+            let hasSeeds = false;
+            for (let i = nextRange[0]; i <= nextRange[1]; i++) {
+                if (togyzState.pits[i] > 0) hasSeeds = true;
+            }
+            if (!hasSeeds) {
+                const winner = togyzState.kazan[0] > togyzState.kazan[1] ? '1-ОЙЫНШЫ ЖЕҢДІ!' : '2-ОЙЫНШЫ ЖЕҢДІ!';
+                showResultModal('🏆', winner, `Ойын аяқталды! Есеп: ${togyzState.kazan[0]} : ${togyzState.kazan[1]}`);
+                return;
+            }
+
+            // Робот жүрісі
+            if (togyzState.mode === 'ai' && togyzState.turn === 1) {
+                togyzState.busy = true;
+                renderTogyzBoard();
+                setTimeout(() => {
+                    togyzState.busy = false;
+                    let validMoves = [];
+                    for (let i = 9; i <= 17; i++) {
+                        if (togyzState.pits[i] > 0) validMoves.push(i);
+                    }
+                    if (validMoves.length > 0) {
+                        const choice = validMoves[Math.floor(Math.random() * validMoves.length)];
+                        makeTogyzMove(choice);
+                    }
+                }, 700);
+            }
+        }
+
+        function dropSeed(idx, player) {
+            if (togyzState.tuzdyk[0] === idx) {
+                togyzState.kazan[0]++;
+            } else if (togyzState.tuzdyk[1] === idx) {
+                togyzState.kazan[1]++;
+            } else {
+                togyzState.pits[idx]++;
+            }
+        }
+
+        /* ==================== 3. ТЕҢГЕ ІЛУ ОЙЫНЫ ЛОГИКАСЫ ==================== */
+        let tengeCanvas, tengeCtx;
+        let tengeScore = 0;
+        let tengeTimeLeft = 40;
+        let horseState = {
+            x: 180,
+            y: 0,
+            gallopPhase: 0,
+            reachProgress: 0, // 0 = отыр, 1 = еңкейіп теңге ілуде
+            isReaching: false
+        };
+        let tengeCoins = [];
+        let bgOffset = 0;
+        let floatingTexts = [];
+
+        function initTengeGame() {
+            stopAllIntervals();
+            tengeCanvas = document.getElementById('tenge-canvas');
+            tengeCtx = tengeCanvas.getContext('2d');
+            resizeTengeCanvas();
+            window.addEventListener('resize', resizeTengeCanvas);
+
+            tengeScore = 0;
+            tengeTimeLeft = 40;
+            horseState.gallopPhase = 0;
+            horseState.reachProgress = 0;
+            horseState.isReaching = false;
+            tengeCoins = [];
+            floatingTexts = [];
+
+            document.getElementById('tenge-score').innerText = tengeScore;
+            document.getElementById('tenge-timer').innerText = `${tengeTimeLeft} с`;
+
+            // Алғашқы теңгелерді жолға орналастыру
+            for (let i = 0; i < 4; i++) {
+                spawnTengeCoin(tengeCanvas.width * 0.6 + i * 360);
+            }
+
+            // Экранның кез келген жерін басқанда да еңкейіп теңге іледі
+            tengeCanvas.onpointerdown = () => grabTengeAction();
+
+            tengeTimerInterval = setInterval(() => {
+                tengeTimeLeft--;
+                document.getElementById('tenge-timer').innerText = `${tengeTimeLeft} с`;
+                if (tengeTimeLeft <= 0) {
+                    stopAllIntervals();
+                    showResultModal('🏆', 'ТАМАША ШАБЫС!', `Сен тұлпар үстінен ${tengeScore} алтын теңге іліп алдың!`);
+                }
+            }, 1000);
+
+            tengeLoop();
+        }
+
+        function resizeTengeCanvas() {
+            if (!tengeCanvas) return;
+            tengeCanvas.width = window.innerWidth;
+            tengeCanvas.height = window.innerHeight;
+            horseState.x = Math.min(240, tengeCanvas.width * 0.24);
+        }
+
+        function spawnTengeCoin(customX) {
+            const w = tengeCanvas.width;
+            const isGold = Math.random() > 0.3; // 70% алтын (10 ұпай), 30% күміс (5 ұпай)
+            tengeCoins.push({
+                x: customX || (w + 120 + Math.random() * 220),
+                collected: false,
+                collectAnim: 0,
+                type: isGold ? 'gold' : 'silver',
+                value: isGold ? 10 : 5,
+                radius: isGold ? 24 : 20
+            });
+        }
+
+        function grabTengeAction() {
+            if (currentGame !== 'tenge' || horseState.isReaching) return;
+            horseState.isReaching = true;
+            playTone(300, 'sine', 0.1, 0.15);
+
+            // Шабандоздың қолы жететін аймақ (аттың алдыңғы/төменгі тұсы)
+            const grabX = horseState.x + 55;
+            let caughtAny = false;
+
+            tengeCoins.forEach(coin => {
+                if (!coin.collected && Math.abs(coin.x - grabX) < 95) {
+                    coin.collected = true;
+                    caughtAny = true;
+                    tengeScore += coin.value;
+                    document.getElementById('tenge-score').innerText = tengeScore;
+                    playHitSound();
+
+                    floatingTexts.push({
+                        x: grabX,
+                        y: tengeCanvas.height * 0.65,
+                        text: `+${coin.value} 🪙`,
+                        alpha: 1
+                    });
+                }
+            });
+
+            if (!caughtAny) {
+                floatingTexts.push({
+                    x: grabX,
+                    y: tengeCanvas.height * 0.68,
+                    text: 'Сәл ерте/кеш!',
+                    alpha: 0.85,
+                    miss: true
+                });
+            }
+        }
+
+        function drawHorseAndRider(ctx, x, groundY, phase, reach) {
+            ctx.save();
+            const bounce = Math.sin(phase) * 8;
+            ctx.translate(x, groundY - 65 + bounce);
+
+            // Аттың жердегі көлеңкесі
+            ctx.fillStyle = 'rgba(0,0,0,0.25)';
+            ctx.beginPath();
+            ctx.ellipse(0, 68 - bounce, 75, 14, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Аттың артқы аяқтары (шабыс анимациясы)
+            const legAngle1 = Math.sin(phase) * 0.6;
+            const legAngle2 = Math.cos(phase) * 0.6;
+            ctx.strokeStyle = '#451a03';
+            ctx.lineWidth = 11;
+            ctx.lineCap = 'round';
+
+            // Артқы сол аяқ
+            ctx.beginPath();
+            ctx.moveTo(-40, 15);
+            ctx.lineTo(-40 + Math.sin(legAngle1) * 28, 62);
+            ctx.stroke();
+
+            // Алдыңғы сол аяқ
+            ctx.beginPath();
+            ctx.moveTo(42, 15);
+            ctx.lineTo(42 + Math.sin(legAngle2) * 32, 62);
+            ctx.stroke();
+
+            // Аттың құйрығы
+            ctx.strokeStyle = '#1c1917';
+            ctx.lineWidth = 10;
+            ctx.beginPath();
+            ctx.moveTo(-58, -5);
+            ctx.quadraticCurveTo(-95, 5 + Math.sin(phase * 1.5) * 12, -88, 35);
+            ctx.stroke();
+
+            // Аттың денесі (Қоңыр тұлпар)
+            ctx.fillStyle = '#78350f';
+            ctx.beginPath();
+            ctx.ellipse(0, 5, 62, 28, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Оюлы ер-тоқым мен жабу
+            ctx.fillStyle = '#dc2626';
+            ctx.beginPath();
+            ctx.roundRect(-24, -22, 48, 26, 8);
+            ctx.fill();
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Аттың мойны мен басы
+            ctx.fillStyle = '#78350f';
+            ctx.beginPath();
+            ctx.moveTo(42, -5);
+            ctx.lineTo(75, -45);
+            ctx.lineTo(95, -35);
+            ctx.lineTo(62, 12);
+            ctx.closePath();
+            ctx.fill();
+
+            // Жалы
+            ctx.strokeStyle = '#1c1917';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(42, -12);
+            ctx.lineTo(72, -48);
+            ctx.stroke();
+
+            // Аттың алдыңғы оң аяғы мен артқы оң аяғы
+            ctx.strokeStyle = '#92400e';
+            ctx.lineWidth = 11;
+            ctx.beginPath();
+            ctx.moveTo(-32, 18);
+            ctx.lineTo(-32 - Math.sin(legAngle1) * 28, 64);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(48, 18);
+            ctx.lineTo(48 - Math.sin(legAngle2) * 32, 64);
+            ctx.stroke();
+
+            // ШАБАНДОЗ (Еңкейіп теңге ілу анимациясы reach: 0 -> 1)
+            ctx.save();
+            ctx.translate(0, -18);
+            // reach = 1 болғанда оңға және төменге қатты еңкейеді
+            ctx.rotate(reach * 1.15);
+
+            // Шабандоздың денесі (Көк шапан)
+            ctx.fillStyle = '#2563eb';
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.roundRect(-14, -42, 28, 42, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            // Басы және Бөркі
+            ctx.fillStyle = '#fde68a';
+            ctx.beginPath();
+            ctx.arc(4, -54, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Қазақша бөрік
+            ctx.fillStyle = '#b91c1c';
+            ctx.beginPath();
+            ctx.arc(4, -58, 15, Math.PI, 0);
+            ctx.fill();
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(-12, -60, 32, 6);
+
+            // Созылған қолы (Теңге ілуге ұмтылған қол)
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 10;
+            ctx.beginPath();
+            ctx.moveTo(8, -32);
+            ctx.lineTo(28 + reach * 35, -15 + reach * 35);
+            ctx.stroke();
+
+            // Алақаны
+            ctx.fillStyle = '#fde68a';
+            ctx.beginPath();
+            ctx.arc(28 + reach * 35, -15 + reach * 35, 7, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+            ctx.restore();
+        }
+
+        function tengeLoop() {
+            if (currentGame !== 'tenge') return;
+            const w = tengeCanvas.width;
+            const h = tengeCanvas.height;
+            const groundY = h * 0.76;
+
+            tengeCtx.clearRect(0, 0, w, h);
+
+            // Жылдамдық уақыт өткен сайын сәл артады
+            const speed = 7.5 + (40 - tengeTimeLeft) * 0.08;
+            bgOffset = (bgOffset + speed) % w;
+            horseState.gallopPhase += 0.28;
+
+            // Еңкею анимациясын басқару
+            if (horseState.isReaching) {
+                horseState.reachProgress += 0.16;
+                if (horseState.reachProgress >= 1) {
+                    horseState.reachProgress = 1;
+                    setTimeout(() => { horseState.isReaching = false; }, 110);
+                }
+            } else if (horseState.reachProgress > 0) {
+                horseState.reachProgress = Math.max(0, horseState.reachProgress - 0.12);
+            }
+
+            // Артқы таулар мен бұлттар (Параллакс фон)
+            tengeCtx.fillStyle = 'rgba(255,255,255,0.65)';
+            for (let i = 0; i < 4; i++) {
+                const cx = ((i * 420 - bgOffset * 0.25) % (w + 300) + (w + 300)) % (w + 300) - 150;
+                tengeCtx.beginPath();
+                tengeCtx.arc(cx, 130, 35, 0, Math.PI * 2);
+                tengeCtx.arc(cx + 30, 125, 42, 0, Math.PI * 2);
+                tengeCtx.arc(cx + 65, 132, 32, 0, Math.PI * 2);
+                tengeCtx.fill();
+            }
+
+            // Жасыл дала мен шабыс жолы
+            tengeCtx.fillStyle = '#16a34a';
+            tengeCtx.fillRect(0, groundY - 25, w, h - groundY + 25);
+            tengeCtx.fillStyle = '#ca8a04';
+            tengeCtx.fillRect(0, groundY - 6, w, 24);
+
+            // Жолдағы қозғалатын шөп/тас белгілері
+            tengeCtx.fillStyle = '#a16207';
+            for (let i = 0; i < 12; i++) {
+                const gx = ((i * 160 - bgOffset) % w + w) % w;
+                tengeCtx.fillRect(gx, groundY + 2, 28, 5);
+            }
+
+            // Теңгелерді салу және жылжыту
+            tengeCoins.forEach(coin => {
+                if (!coin.collected) {
+                    coin.x -= speed;
+                    // Теңге көлеңкесі
+                    tengeCtx.fillStyle = 'rgba(0,0,0,0.25)';
+                    tengeCtx.beginPath();
+                    tengeCtx.ellipse(coin.x, groundY + 8, coin.radius, 6, 0, 0, Math.PI * 2);
+                    tengeCtx.fill();
+
+                    // Алтын/Күміс теңге
+                    tengeCtx.save();
+                    tengeCtx.translate(coin.x, groundY - 4);
+                    tengeCtx.fillStyle = coin.type === 'gold' ? '#fbbf24' : '#e2e8f0';
+                    tengeCtx.strokeStyle = coin.type === 'gold' ? '#92400e' : '#475569';
+                    tengeCtx.lineWidth = 3;
+                    tengeCtx.beginPath();
+                    tengeCtx.ellipse(0, 0, coin.radius, coin.radius * 0.72, 0, 0, Math.PI * 2);
+                    tengeCtx.fill();
+                    tengeCtx.stroke();
+
+                    // Теңге ортасындағы ою белгісі
+                    tengeCtx.fillStyle = coin.type === 'gold' ? '#b45309' : '#64748b';
+                    tengeCtx.font = '900 16px Nunito';
+                    tengeCtx.textAlign = 'center';
+                    tengeCtx.fillText(coin.value, 0, 5);
+                    tengeCtx.restore();
+                } else if (coin.collectAnim < 1) {
+                    // Іліп алынған теңгенің жоғары ұшу анимациясы
+                    coin.collectAnim += 0.08;
+                    const flyY = (groundY - 4) - coin.collectAnim * 140;
+                    tengeCtx.save();
+                    tengeCtx.globalAlpha = 1 - coin.collectAnim;
+                    tengeCtx.fillStyle = '#fbbf24';
+                    tengeCtx.beginPath();
+                    tengeCtx.arc(coin.x, flyY, coin.radius, 0, Math.PI * 2);
+                    tengeCtx.fill();
+                    tengeCtx.restore();
+                }
+            });
+
+            // Экраннан өтіп кеткен теңгелерді жаңарту
+            tengeCoins = tengeCoins.filter(c => c.x > -100 && c.collectAnim < 1);
+            while (tengeCoins.length < 4) {
+                const maxX = tengeCoins.reduce((m, c) => Math.max(m, c.x), w);
+                spawnTengeCoin(maxX + 340 + Math.random() * 200);
+            }
+
+            // Тұлпар мен шабандозды салу
+            drawHorseAndRider(tengeCtx, horseState.x, groundY, horseState.gallopPhase, horseState.reachProgress);
+
+            // Ұпай жазулары (+10)
+            floatingTexts.forEach(ft => {
+                ft.y -= 2;
+                ft.alpha -= 0.025;
+                tengeCtx.save();
+                tengeCtx.globalAlpha = Math.max(0, ft.alpha);
+                tengeCtx.font = '900 28px Nunito';
+                tengeCtx.fillStyle = ft.miss ? '#ffffff' : '#fef08a';
+                tengeCtx.strokeStyle = '#000000';
+                tengeCtx.lineWidth = 4;
+                tengeCtx.strokeText(ft.text, ft.x, ft.y);
+                tengeCtx.fillText(ft.text, ft.x, ft.y);
+                tengeCtx.restore();
+            });
+            floatingTexts = floatingTexts.filter(ft => ft.alpha > 0);
+
+            tengeAnimFrame = requestAnimationFrame(tengeLoop);
+        }
+
+        /* ==================== 4. АРҚАН ТАРТУ ОЙЫНЫ ЛОГИКАСЫ ==================== */
+        let ropePosition = 0; // -100 (Көк жеңді) .. +100 (Қызыл жеңді)
+        let arkanScores = { left: 0, right: 0 };
+        let arkanActive = false;
+
+        function initArkanGame() {
+            ropePosition = 0;
+            arkanActive = true;
+            updateRopeVisual();
+        }
+
+        function pullRope(side) {
+            if (!arkanActive) return;
+            playTone(side === 'left' ? 350 : 420, 'triangle', 0.06, 0.2);
+
+            if (side === 'left') {
+                ropePosition -= 7;
+            } else {
+                ropePosition += 7;
+            }
+
+            updateRopeVisual();
+
+            if (ropePosition <= -100) {
+                arkanActive = false;
+                arkanScores.left++;
+                document.getElementById('arkan-score-left').innerText = arkanScores.left;
+                showResultModal('🔵', 'КӨК КОМАНДА ЖЕҢДІ!', '1-команда арқанды өз жағына тартып алды!');
+            } else if (ropePosition >= 100) {
+                arkanActive = false;
+                arkanScores.right++;
+                document.getElementById('arkan-score-right').innerText = arkanScores.right;
+                showResultModal('🔴', 'ҚЫЗЫЛ КОМАНДА ЖЕҢДІ!', '2-команда арқанды өз жағына тартып алды!');
+            }
+        }
+
+        function updateRopeVisual() {
+            const maxShift = Math.min(window.innerWidth * 0.22, 220);
+            const shiftPx = (ropePosition / 100) * maxShift;
+            document.getElementById('arkan-rope-group').style.transform = `translateX(${shiftPx}px)`;
+        }
+
+        /* ==================== 5. САДАҚ АТУ (ЖАМБЫ АТУ) ОЙЫНЫ ЛОГИКАСЫ ==================== */
+        let sadakCanvas, sadakCtx;
+        let bow = { x: 0, y: 0, pullX: 0, pullY: 0, isDragging: false, angle: -0.2 };
+        let arrow = { x: 0, y: 0, vx: 0, vy: 0, angle: 0, active: false };
+        let jamby = { x: 0, y: 0, baseY: 0, radius: 44, phase: 0, hitAnim: 0 };
+        let sadakScore = 0;
+        let sadakArrows = 8;
+        let sadakPopups = [];
+
+        function initSadakGame() {
+            stopAllIntervals();
+            sadakCanvas = document.getElementById('sadak-canvas');
+            sadakCtx = sadakCanvas.getContext('2d');
+            resizeSadakCanvas();
+            window.addEventListener('resize', resizeSadakCanvas);
+
+            sadakScore = 0;
+            sadakArrows = 8;
+            sadakPopups = [];
+            arrow.active = false;
+            bow.isDragging = false;
+            bow.pullX = 0;
+            bow.pullY = 0;
+            updateSadakUI();
+
+            sadakCanvas.onpointerdown = (e) => {
+                if (arrow.active || sadakArrows <= 0) return;
+                const rect = sadakCanvas.getBoundingClientRect();
+                const px = e.clientX - rect.left;
+                const py = e.clientY - rect.top;
+                if (Math.hypot(px - bow.x, py - bow.y) < 130) {
+                    bow.isDragging = true;
+                }
+            };
+
+            sadakCanvas.onpointermove = (e) => {
+                if (!bow.isDragging) return;
+                const rect = sadakCanvas.getBoundingClientRect();
+                const px = e.clientX - rect.left;
+                const py = e.clientY - rect.top;
+                let dx = px - bow.x;
+                let dy = py - bow.y;
+                const dist = Math.hypot(dx, dy);
+                const maxPull = 140;
+                if (dist > maxPull) {
+                    dx = (dx / dist) * maxPull;
+                    dy = (dy / dist) * maxPull;
+                }
+                bow.pullX = dx;
+                bow.pullY = dy;
+                if (dist > 10) {
+                    bow.angle = Math.atan2(-dy, -dx);
+                }
+            };
+
+            sadakCanvas.onpointerup = () => {
+                if (!bow.isDragging) return;
+                bow.isDragging = false;
+                const pullDist = Math.hypot(bow.pullX, bow.pullY);
+                if (pullDist > 25) {
+                    arrow.x = bow.x;
+                    arrow.y = bow.y;
+                    arrow.vx = -bow.pullX * 0.24;
+                    arrow.vy = -bow.pullY * 0.24;
+                    arrow.angle = Math.atan2(arrow.vy, arrow.vx);
+                    arrow.active = true;
+                    sadakArrows--;
+                    updateSadakUI();
+                    playTone(280, 'triangle', 0.14, 0.25);
+                }
+                bow.pullX = 0;
+                bow.pullY = 0;
+            };
+
+            sadakLoop();
+        }
+
+        function resizeSadakCanvas() {
+            if (!sadakCanvas) return;
+            sadakCanvas.width = window.innerWidth;
+            sadakCanvas.height = window.innerHeight;
+            bow.x = sadakCanvas.width * 0.18;
+            bow.y = sadakCanvas.height * 0.65;
+            jamby.x = sadakCanvas.width * 0.78;
+            jamby.baseY = sadakCanvas.height * 0.44;
+        }
+
+        function updateSadakUI() {
+            document.getElementById('sadak-score').innerText = sadakScore;
+            document.getElementById('sadak-arrows').innerText = sadakArrows;
+        }
+
+        function sadakLoop() {
+            if (currentGame !== 'sadak') return;
+            const w = sadakCanvas.width;
+            const h = sadakCanvas.height;
+            const groundY = h * 0.84;
+
+            sadakCtx.clearRect(0, 0, w, h);
+
+            // Жасыл дала фоны
+            sadakCtx.fillStyle = '#15803d';
+            sadakCtx.fillRect(0, groundY, w, h - groundY);
+            sadakCtx.fillStyle = '#22c55e';
+            sadakCtx.fillRect(0, groundY - 8, w, 12);
+
+            // Жамбы нысанасының жоғары-төмен қозғалысы
+            jamby.phase += 0.035;
+            jamby.y = jamby.baseY + Math.sin(jamby.phase) * (h * 0.16);
+            if (jamby.hitAnim > 0) jamby.hitAnim -= 0.05;
+
+            // Жамбы ілінген биік бағана (Сырық)
+            sadakCtx.strokeStyle = '#78350f';
+            sadakCtx.lineWidth = 14;
+            sadakCtx.lineCap = 'round';
+            sadakCtx.beginPath();
+            sadakCtx.moveTo(jamby.x, groundY);
+            sadakCtx.lineTo(jamby.x, h * 0.2);
+            sadakCtx.stroke();
+
+            // Бағана басындағы оюлы айшық пен жіп
+            sadakCtx.fillStyle = '#fbbf24';
+            sadakCtx.beginPath();
+            sadakCtx.arc(jamby.x, h * 0.2, 12, 0, Math.PI * 2);
+            sadakCtx.fill();
+
+            sadakCtx.strokeStyle = '#fef08a';
+            sadakCtx.lineWidth = 3;
+            sadakCtx.beginPath();
+            sadakCtx.moveTo(jamby.x, h * 0.2);
+            sadakCtx.lineTo(jamby.x, jamby.y - jamby.radius);
+            sadakCtx.stroke();
+
+            // Жамбы (Нысана шеңбері)
+            sadakCtx.save();
+            sadakCtx.translate(jamby.x, jamby.y);
+            const scaleBoost = 1 + jamby.hitAnim * 0.25;
+            sadakCtx.scale(scaleBoost, scaleBoost);
+
+            const rings = [
+                { r: jamby.radius, color: '#dc2626' },
+                { r: jamby.radius * 0.72, color: '#ffffff' },
+                { r: jamby.radius * 0.45, color: '#2563eb' },
+                { r: jamby.radius * 0.22, color: '#fbbf24' }
+            ];
+            rings.forEach(ring => {
+                sadakCtx.fillStyle = ring.color;
+                sadakCtx.beginPath();
+                sadakCtx.arc(0, 0, ring.r, 0, Math.PI * 2);
+                sadakCtx.fill();
+            });
+            sadakCtx.restore();
+
+            // Болжамды ұшу сызығы (тартып тұрғанда)
+            if (bow.isDragging) {
+                const simVx = -bow.pullX * 0.24;
+                const simVy = -bow.pullY * 0.24;
+                sadakCtx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+                for (let t = 1; t <= 14; t++) {
+                    const px = bow.x + simVx * t * 1.8;
+                    const py = bow.y + simVy * t * 1.8 + 0.5 * 0.32 * Math.pow(t * 1.8, 2);
+                    sadakCtx.beginPath();
+                    sadakCtx.arc(px, py, 4.5, 0, Math.PI * 2);
+                    sadakCtx.fill();
+                }
+            }
+
+            // Садақ салу
+            sadakCtx.save();
+            sadakCtx.translate(bow.x, bow.y);
+            sadakCtx.rotate(bow.angle);
+
+            const pullDepth = bow.isDragging ? Math.min(55, Math.hypot(bow.pullX, bow.pullY) * 0.45) : 0;
+
+            // Адырна (Садақ жібі)
+            sadakCtx.strokeStyle = '#f8fafc';
+            sadakCtx.lineWidth = 3;
+            sadakCtx.beginPath();
+            sadakCtx.moveTo(0, -72);
+            sadakCtx.lineTo(-pullDepth, 0);
+            sadakCtx.lineTo(0, 72);
+            sadakCtx.stroke();
+
+            // Садақ ағашы (Иілген доға)
+            sadakCtx.strokeStyle = '#78350f';
+            sadakCtx.lineWidth = 11;
+            sadakCtx.lineCap = 'round';
+            sadakCtx.beginPath();
+            sadakCtx.moveTo(0, -72);
+            sadakCtx.quadraticCurveTo(52, 0, 0, 72);
+            sadakCtx.stroke();
+
+            sadakCtx.strokeStyle = '#fbbf24';
+            sadakCtx.lineWidth = 3;
+            sadakCtx.beginPath();
+            sadakCtx.moveTo(0, -68);
+            sadakCtx.quadraticCurveTo(46, 0, 0, 68);
+            sadakCtx.stroke();
+
+            // Садақта тұрған жебе (әлі атылмаған кезде)
+            if (!arrow.active && sadakArrows > 0) {
+                drawArrowShape(sadakCtx, -pullDepth, 0, 0);
+            }
+            sadakCtx.restore();
+
+            // Ұшып бара жатқан жебе физикасы
+            if (arrow.active) {
+                arrow.vy += 0.32;
+                arrow.x += arrow.vx;
+                arrow.y += arrow.vy;
+                arrow.angle = Math.atan2(arrow.vy, arrow.vx);
+
+                // Жебе ұшының координаттары
+                const tipX = arrow.x + Math.cos(arrow.angle) * 42;
+                const tipY = arrow.y + Math.sin(arrow.angle) * 42;
+
+                // Жамбыға тиюін тексеру
+                const distToJamby = Math.hypot(tipX - jamby.x, tipY - jamby.y);
+                if (distToJamby <= jamby.radius + 8) {
+                    arrow.active = false;
+                    jamby.hitAnim = 1;
+                    playHitSound();
+
+                    let pts = 10;
+                    let label = '+10 ҰПАЙ!';
+                    if (distToJamby < jamby.radius * 0.28) {
+                        pts = 30;
+                        label = '🎯 ДӘЛ ОРТАСЫ! +30';
+                    } else if (distToJamby < jamby.radius * 0.6) {
+                        pts = 20;
+                        label = '🔥 ТАМАША! +20';
+                    }
+
+                    sadakScore += pts;
+                    updateSadakUI();
+                    sadakPopups.push({ x: jamby.x - 40, y: jamby.y - 40, text: label, alpha: 1 });
+                    checkSadakEnd();
+                } else if (arrow.x > w + 80 || arrow.y > groundY) {
+                    arrow.active = false;
+                    checkSadakEnd();
+                } else {
+                    drawArrowShape(sadakCtx, arrow.x, arrow.y, arrow.angle);
+                }
+            }
+
+            // Ұпай жазулары
+            sadakPopups.forEach(p => {
+                p.y -= 1.8;
+                p.alpha -= 0.02;
+                sadakCtx.save();
+                sadakCtx.globalAlpha = Math.max(0, p.alpha);
+                sadakCtx.font = '900 26px Nunito';
+                sadakCtx.fillStyle = '#fef08a';
+                sadakCtx.strokeStyle = '#1e1b4b';
+                sadakCtx.lineWidth = 4;
+                sadakCtx.strokeText(p.text, p.x, p.y);
+                sadakCtx.fillText(p.text, p.x, p.y);
+                sadakCtx.restore();
+            });
+            sadakPopups = sadakPopups.filter(p => p.alpha > 0);
+
+            sadakAnimFrame = requestAnimationFrame(sadakLoop);
+        }
+
+        function drawArrowShape(ctx, x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            // Жебе сабы
+            ctx.strokeStyle = '#92400e';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(-35, 0);
+            ctx.lineTo(38, 0);
+            ctx.stroke();
+            // Темір ұшы
+            ctx.fillStyle = '#cbd5e1';
+            ctx.beginPath();
+            ctx.moveTo(48, 0);
+            ctx.lineTo(34, -7);
+            ctx.lineTo(34, 7);
+            ctx.closePath();
+            ctx.fill();
+            // Қауырсыны
+            ctx.fillStyle = '#dc2626';
+            ctx.beginPath();
+            ctx.moveTo(-35, 0);
+            ctx.lineTo(-46, -8);
+            ctx.lineTo(-26, 0);
+            ctx.lineTo(-46, 8);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function checkSadakEnd() {
+            if (sadakArrows <= 0 && !arrow.active) {
+                setTimeout(() => {
+                    showResultModal('🏹', 'МЕРГЕНДІК СЫНЫ АЯҚТАЛДЫ!', `Сен садақ атудан ${sadakScore} ұпай жинадың!`);
+                }, 350);
+            }
+        }
+    </script>
+</body>
+</html>
